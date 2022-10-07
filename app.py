@@ -1,8 +1,8 @@
-from flask import Flask, redirect, url_for, request, jsonify
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-app = Flask('app')
+#app = Flask('app')
 
 
 @app.route('/')
