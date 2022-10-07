@@ -22,11 +22,11 @@ def wsjf():
         e = int(request.args.get('e'))
         wsjf = (v + t + r) / e
         wsjf = round(wsjf, 2)
-        push("wsjf success: %s" % wsjf)
+        #push("wsjf success: %s" % wsjf)
         return jsonify({'wsjf_score':  wsjf})
         
     except Exception as e:
-        push("wsjf failed. args: " % str(request.args))
+        #push("wsjf failed. args: " % str(request.args))
         return "Missing an argument or another problem. Need v, t, r, and e. Should look like /wsjf?v=1&t=2&r=3&e=5"
 
 # def push(message):
