@@ -30,10 +30,12 @@ def wsjf():
 
 def push(message):
     import requests
+    import os
+    print(os.environ['TOKEN'])
     url = "https://api.pushover.net/1/messages.json"
     r = requests.post(url, data = {
-      "token": "",
-      "user": "",
+      "token": os.environ['TOKEN'],
+      "user": os.environ['USER'],
       "message": "%s" % message
     })
     print(r.status_code)
