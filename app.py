@@ -2,8 +2,6 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-#app = Flask('app')
-
 
 @app.route('/')
 def hello():
@@ -15,6 +13,7 @@ def wsjf():
     # exit()
     # wsjf = 2
     # return redirect(url_for('result', wsjf=wsjf))
+    print(__name__)
     try: 
         v = int(request.args.get('v'))
         t = int(request.args.get('t'))
