@@ -20,7 +20,7 @@ def wsjf():
         r = int(request.args.get('r'))
         e = int(request.args.get('e'))
         wsjf = (v + t + r) / e
-        #wsjf = round(wsjf, 2)
+        wsjf = round(wsjf, 2)
         #push("wsjf success: %s" % wsjf)
         return jsonify({'wsjf_score':  wsjf})
         
