@@ -9,11 +9,6 @@ def hello():
 
 @app.route('/wsjf', methods=['GET'])
 def wsjf():
-    # print(request.args)
-    # exit()
-    # wsjf = 2
-    # return redirect(url_for('result', wsjf=wsjf))
-    print(__name__)
     try: 
         v = int(request.args.get('v'))
         t = int(request.args.get('t'))
@@ -25,7 +20,7 @@ def wsjf():
         return jsonify({'wsjf_score':  wsjf})
         
     except Exception as e:
-        push("wsjf failed. args: " % str(request.args))
+        push("wsjf failed.")
         return "Missing an argument or another problem. Need v, t, r, and e. Should look like /wsjf?v=1&t=2&r=3&e=5"
 
 def push(message):
