@@ -23,15 +23,20 @@ def wsjf():
         wsjf_score = round(wsjf_score, 2)
         #push("wsjf success: %s" % wsjf_score)
 
-        try:
-            update_asana_task(task_id, wsjf_score)
-            asana_updated = "True"
-            print("Asana successfully updated.")
-        except:
-            print("Asana not updated.")
-            asana_updated = "False"
+        asana_updated = "unknown"
 
-        return jsonify({'wsjf_score':  wsjf_score, 'asana_updated': 'unknown for now, check the logs'})
+        if request.args.get('taskid') is not None:
+            try:
+                update_asana_task(task_id, wsjf_score)
+                asana_updated = "yes"
+                print("Asana successfully updated.")
+            except:
+                print("Asana not updated.")
+                asana_updated = "no"
+        else:   
+            asana_updated = "no task_id provided in args; didn't try"
+
+        return jsonify({'wsjf_score':  wsjf_score, 'asana_updated': asana_updated})
 
         
     except Exception as e:
@@ -60,7 +65,8 @@ def update_asana_task(task_id, wsjf_score):
     url = "https://app.asana.com/api/1.0/tasks/%s" % task_id
 
     response = requests.put(url, headers=headers, data=data2)
-    print(response.text)
+    #print(response.text)
+    print("asana response: %s" % response.code)
 
 
 def push(message):
