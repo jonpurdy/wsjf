@@ -1,5 +1,9 @@
 from flask import Flask, request, jsonify
 
+import requests
+import os
+import json
+
 app = Flask(__name__)
 
 
@@ -14,18 +18,52 @@ def wsjf():
         t = int(request.args.get('t'))
         r = int(request.args.get('r'))
         e = int(request.args.get('e'))
-        wsjf = (v + t + r) / e
-        wsjf = round(wsjf, 2)
-        push("wsjf success: %s" % wsjf)
-        return jsonify({'wsjf_score':  wsjf})
+        task_id = request.args.get('taskid')
+        wsjf_score = (v + t + r) / e
+        wsjf_score = round(wsjf_score, 2)
+        #push("wsjf success: %s" % wsjf_score)
+
+        try:
+            update_asana_task(task_id, wsjf_score)
+            asana_updated = "True"
+            print("Asana successfully updated.")
+        except:
+            print("Asana not updated.")
+            asana_updated = "False"
+
+        return jsonify({'wsjf_score':  wsjf_score, 'asana_updated': 'unknown for now, check the logs'})
+
         
     except Exception as e:
-        push("wsjf failed.")
+        #push("wsjf failed.")
         return "Missing an argument or another problem. Need v, t, r, and e. Should look like /wsjf?v=1&t=2&r=3&e=5"
 
+    
+def update_asana_task(task_id, wsjf_score):
+    # https://app.asana.com/api/1.0/tasks/TASK_ID
+
+    try:
+        asana_token = os.environ['ASANA_TOKEN']
+    except Exception as e:
+        print(e)
+        asana_token = '111222'
+
+    headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer %s' % asana_token,
+    }
+
+    data2 = '{"data": {"custom_fields": { "1202941379778435": "%s" } } }' % wsjf_score
+
+    jsondata = json.loads(data2)
+
+    url = "https://app.asana.com/api/1.0/tasks/%s" % task_id
+
+    response = requests.put(url, headers=headers, data=data2)
+    print(response.text)
+
+
 def push(message):
-    import requests
-    import os
     print(os.environ['TOKEN'])
     url = "https://api.pushover.net/1/messages.json"
     r = requests.post(url, data = {
